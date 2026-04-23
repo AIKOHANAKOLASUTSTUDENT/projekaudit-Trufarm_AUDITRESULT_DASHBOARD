@@ -45,7 +45,7 @@ Buat header full-width dengan background warna `#1A1A2E` (charcoal gelap).
 
 ### Kanan header:
 - **Kotak foto wawancara** — 2 thumbnail placeholder berdampingan (masing-masing 80×60px, background abu-abu, teks `"[ Foto Interview 1 ]"` dan `"[ Foto Interview 2 ]"`). Di bawah masing-masing foto, tampilkan keterangan:
-  - Foto 1: `"Interview Store Manager — 10 Maret 2026"`
+  - Foto 1: `"Interview Store Manager — 23 Februari 2026"`
   - Foto 2: `"Interview IT Management — 10 Maret 2026"`
 - Di bawah kedua foto: teks kecil `"Lokasi: TruFarm Airmadidi, Sulawesi Utara"`
 
@@ -60,7 +60,7 @@ Buat header full-width dengan background warna `#1A1A2E` (charcoal gelap).
 | Nama Perusahaan | PT TruFarm Indonesia |
 | Jenis Usaha | Retail Supermarket Modern Lokal |
 | Lokasi HQ | Jakarta |
-| Tanggal Audit | 10 Maret 2026 |
+| Tanggal Audit | 23 Februari 2026 & 10 Maret 2026 |
 | Jumlah Cabang | 4 Cabang |
 | Total Karyawan | 60+ Karyawan |
 | Sistem Utama | Microsoft Dynamics NAV (Navision) + Talenta HRD |
@@ -331,7 +331,7 @@ Di setiap titik, tampilkan kode risiko (R-01, R-02, dst) sebagai label kecil.
 
 ### Header section:
 Judul: "Analisis NIST Cybersecurity Framework 2.0 — TruFarm Airmadidi"
-Sub: "Berdasarkan hasil wawancara 10 Maret 2026 dengan Store Manager & IT Management"
+Sub: "Berdasarkan hasil wawancara 23 Februari 2026 & 10 Maret 2026 dengan Store Manager & IT Management"
 
 ### Kartu skor ringkasan (6 fungsi NIST — horizontal bar):
 
@@ -634,7 +634,7 @@ Saat diklik, muncul form dengan field:
 **Informasi audit:**
 - Auditor: Mahasiswa Universitas Klabat — Mata Kuliah Information System Audit - A
 - Tim: Brendon Davidson Kulon (Ketua), Aiko Hanako Lasut, Jonathan Reinald Lapian, Carolina Pears Pamela Langi, Fiktor Retno Lobbu
-- Tanggal audit lapangan: 10 Maret 2026
+- Tanggal audit lapangan: 23 Februari 2026 & 10 Maret 2026
 - Lokasi: TruFarm Airmadidi, Sulawesi Utara
 - Framework: NIST Cybersecurity Framework (CSF) 2.0
 - Metode: Wawancara terstruktur + Observasi langsung + Dokumentasi
