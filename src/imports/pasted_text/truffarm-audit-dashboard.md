@@ -551,8 +551,6 @@ Saat diklik, muncul form dengan field:
 - Kategori (dropdown: Governance / Access Control / Data Security / Monitoring / Incident Response / Recovery / Training / Infrastructure)
 - Prioritas (dropdown: Critical / High / Medium / Low)
 - Deskripsi detail
-- Pihak yang bertanggung jawab
-- Target waktu implementasi
 - Tombol [Simpan] dan [Batal]
 
 ### 10 Kartu Rekomendasi Default (sudah terisi):
@@ -561,71 +559,51 @@ Saat diklik, muncul form dengan field:
 - Kategori: Governance
 - Prioritas: CRITICAL
 - Deskripsi: "Segera buat buku panduan tertulis (SOP digital) untuk seluruh prosedur operasional sistem informasi, termasuk prosedur penggunaan Navision, POS, backup, dan penanganan insiden. Kurangi ketergantungan pada instruksi lisan."
-- Tanggung Jawab: Store Manager + IT Pusat
-- Target: 30 hari
 
 **REC-02 — Otomatisasi Backup Harian**
 - Kategori: Data Security
 - Prioritas: CRITICAL
 - Deskripsi: "Ubah sistem backup dari manual (bergantung shift pagi) menjadi otomatis terjadwal setiap hari. Implementasi cloud backup atau scheduled task di malam hari. Tambahkan off-site backup. Lakukan uji restore minimal 1x per kuartal untuk memastikan data dapat dipulihkan."
-- Tanggung Jawab: IT Toko + IT Pusat
-- Target: 30 hari
 
 **REC-03 — Penguatan Kebijakan Password**
 - Kategori: Access Control
 - Prioritas: CRITICAL
 - Deskripsi: "Ubah kebijakan password dari 4 digit menjadi minimal 8 karakter alfanumerik (kombinasi huruf dan angka). Wajibkan pergantian password minimal setiap 90 hari. Aktifkan audit log untuk mencatat waktu login terakhir setiap akun."
-- Tanggung Jawab: IT Pusat + Store Manager
-- Target: 14 hari
 
 **REC-04 — Penjadwalan Update Sistem**
 - Kategori: Infrastructure
 - Prioritas: HIGH
 - Deskripsi: "Koordinasikan dengan IT Pusat Jakarta agar semua update sistem Navision dan POS dijadwalkan di luar jam operasional toko (misalnya pukul 02.00–05.00 dini hari). Buat kalender update bulanan yang dikomunikasikan ke semua kepala toko minimal 3 hari sebelumnya."
-- Tanggung Jawab: IT Pusat Jakarta
-- Target: 14 hari
 
 **REC-05 — Implementasi Monitoring Otomatis**
 - Kategori: Monitoring
 - Prioritas: HIGH
 - Deskripsi: "Implementasi sistem monitoring otomatis dengan notifikasi alert untuk mendeteksi gangguan sistem, anomali aktivitas pengguna, dan masalah jaringan. Integrasikan monitoring ke dashboard IT sehingga dapat diakses real-time oleh IT toko dan pusat."
-- Tanggung Jawab: IT Pusat + IT Toko
-- Target: 60 hari
 
 **REC-06 — Pembuatan Risk Register Formal**
 - Kategori: Governance
 - Prioritas: HIGH
 - Deskripsi: "Buat dan dokumentasikan risk register formal berdasarkan hasil audit ini. Lakukan evaluasi risk register minimal setiap 6 bulan. Tunjuk penanggung jawab manajemen risiko IT di setiap toko."
-- Tanggung Jawab: Store Manager + Area Head
-- Target: 30 hari
 
 **REC-07 — Penyusunan DRP & BCP**
 - Kategori: Recovery
 - Prioritas: HIGH
-- Deskripsi: "Susun Disaster Recovery Plan (DRP) dan Business Continuity Plan (BCP) formal yang mencakup: prosedur pemulihan data, target waktu pemulihan (RTO), daftar kontak darurat, prosedur operasional manual jika sistem mati. Uji DRP minimal 1x per tahun."
-- Tanggung Jawab: IT Pusat + Store Manager
-- Target: 60 hari
+- Deskripsi: "Susun Disaster Recovery Plan (DRP) dan Business Continuity Plan (BCP) formal yang mencakup: prosedur pemulihan data, daftar kontak darurat, prosedur operasional manual jika sistem mati. Uji DRP minimal 1x per tahun."
 
 **REC-08 — Pelatihan Keamanan Siber**
 - Kategori: Training
 - Prioritas: HIGH
 - Deskripsi: "Buat program pelatihan keamanan dasar untuk semua karyawan (bukan hanya IT dan manager). Materi meliputi: kesadaran keamanan password, pengenalan phishing, prosedur penanganan data sensitif, dan cara melaporkan insiden. Lakukan pelatihan minimal 1x per tahun."
-- Tanggung Jawab: Store Manager + IT Toko
-- Target: 45 hari
 
 **REC-09 — Dokumentasi Inventory Aset IT**
 - Kategori: Governance
 - Prioritas: MEDIUM
 - Deskripsi: "Buat inventaris lengkap semua aset IT per toko: hardware (komputer kasir, server, UPS, CCTV, perangkat jaringan), software (Navision versi, Talenta, OS), dan lisensi. Update inventaris setiap ada perubahan aset."
-- Tanggung Jawab: IT Toko + IT Pusat
-- Target: 30 hari
 
 **REC-10 — SOP Penanganan Insiden Tertulis**
 - Kategori: Incident Response
 - Prioritas: HIGH
 - Deskripsi: "Buat SOP tertulis untuk penanganan insiden yang mencakup: prosedur shutdown server darurat, langkah pertama saat POS mati, prosedur eskalasi (IT toko → Store Manager → IT Pusat), template laporan insiden, dan prosedur pasca-insiden. Pastikan SOP tersedia di setiap toko dan mudah diakses."
-- Tanggung Jawab: IT Pusat + Store Manager
-- Target: 30 hari
 
 ---
 

@@ -1,157 +1,107 @@
-import { useState } from 'react';
 import { Plus, X, FileText, Database, Lock, Server, Shield, Users, Activity, AlertTriangle } from 'lucide-react';
 
-interface Recommendation {
-  id: string;
-  title: string;
-  category: string;
-  priority: string;
-  description: string;
-  responsible: string;
-  target: string;
-}
-
-const initialRecommendations: Recommendation[] = [
+const nistRecommendations = [
   {
-    id: 'REC-01',
-    title: 'Digitalisasi SOP',
-    category: 'Governance',
-    priority: 'CRITICAL',
-    description: 'Segera buat buku panduan tertulis (SOP digital) untuk seluruh prosedur operasional sistem informasi, termasuk prosedur penggunaan Navision, POS, backup, dan penanganan insiden. Kurangi ketergantungan pada instruksi lisan.',
-    responsible: 'Store Manager + IT Pusat',
-    target: '30 hari'
+    function: 'Govern',
+    risk: 'Seluruh kebijakan keamanan disampaikan secara lisan, tidak ada dokumen formal kebijakan IT, pembagian peran IT tidak terdokumentasi (SK/TOR belum ada).',
+    impact: 'Pengelolaan keamanan tidak konsisten, sulit dievaluasi dan diaudit bila terjadi insiden.',
+    recommendations: [
+      'Susun dokumen Kebijakan Keamanan Informasi tertulis (penggunaan sistem, password, hak akses, backup, insiden).',
+      'Formalkan pembagian peran IT toko dan IT pusat dalam dokumen tertulis beserta jalur eskalasi.',
+      'Sosialisasikan kebijakan kepada seluruh karyawan secara berkala, minimal 6 bulan sekali.',
+      'Tinjau dan perbarui kebijakan minimal setahun sekali.'
+    ],
+    priority: 'Tinggi'
   },
   {
-    id: 'REC-02',
-    title: 'Otomatisasi Backup Harian',
-    category: 'Data Security',
-    priority: 'CRITICAL',
-    description: 'Ubah sistem backup dari manual (bergantung shift pagi) menjadi otomatis terjadwal setiap hari. Implementasi cloud backup atau scheduled task di malam hari. Tambahkan off-site backup. Lakukan uji restore minimal 1x per kuartal untuk memastikan data dapat dipulihkan.',
-    responsible: 'IT Toko + IT Pusat',
-    target: '30 hari'
+    function: 'Identify',
+    risk: 'Inventaris perangkat lunak dan versinya tidak ada, tidak ada proses penilaian risiko formal (Risk Register), evaluasi sistem hanya berdasarkan pengalaman tanpa dokumentasi.',
+    impact: 'Kerentanan sistem tidak teridentifikasi; mitigasi risiko tidak terarah; potensi insiden tidak terdeteksi sejak dini.',
+    recommendations: [
+      'Buat inventaris lengkap hardware dan software per perangkat, mencakup nama, versi, lisensi, dan status pembaruan; diperbarui setiap 6 bulan sekali.',
+      'Susun Risk Register yang mencantumkan aset utama (POS, Navision, jaringan), ancaman, kerentanan, dan tingkat risiko.',
+      'Dokumentasikan setiap proses evaluasi dan perbaikan sistem secara terstruktur.'
+    ],
+    priority: 'Tinggi'
   },
   {
-    id: 'REC-03',
-    title: 'Penguatan Kebijakan Password',
-    category: 'Access Control',
-    priority: 'CRITICAL',
-    description: 'Ubah kebijakan password dari 4 digit menjadi minimal 8 karakter alfanumerik (kombinasi huruf dan angka). Wajibkan pergantian password minimal setiap 90 hari. Aktifkan audit log untuk mencatat waktu login terakhir setiap akun.',
-    responsible: 'IT Pusat + Store Manager',
-    target: '14 hari'
+    function: 'Protect',
+    risk: 'Update sistem tidak terjadwal (mendadak dari pusat); tidak ada kebijakan pergantian password berkala; pelatihan keamanan tidak mencakup aspek keamanan informasi yang memadai untuk kasir.',
+    impact: 'Celah keamanan tidak tertambal; akun rentan diakses pihak tidak berwenang; human error meningkat.',
+    recommendations: [
+      'Implementasi kebijakan pergantian password minimal 90 hari untuk semua akun.',
+      'Standarisasi jadwal patch/update software (bukan mendadak dari pusat).',
+      'Selenggarakan pelatihan keamanan rutin tahunan untuk semua karyawan.',
+      'Backup ditingkatkan menjadi 3-2-1 (lokal + eksternal + cloud) dengan jadwal mingguan.'
+    ],
+    priority: 'Tinggi'
   },
   {
-    id: 'REC-04',
-    title: 'Penjadwalan Update Sistem',
-    category: 'Infrastructure',
-    priority: 'HIGH',
-    description: 'Koordinasikan dengan IT Pusat Jakarta agar semua update sistem Navision dan POS dijadwalkan di luar jam operasional toko (misalnya pukul 02.00–05.00 dini hari). Buat kalender update bulanan yang dikomunikasikan ke semua kepala toko minimal 3 hari sebelumnya.',
-    responsible: 'IT Pusat Jakarta',
-    target: '14 hari'
+    function: 'Detect',
+    risk: 'Monitoring sistem hanya manual oleh IT (cek log kasir); tidak ada sistem alert otomatis; anomali seperti promo yang tidak terhapus baru diketahui setelah berdampak',
+    impact: 'Insiden terdeteksi terlambat; potensi kerugian finansial akibat promo berjalan tanpa kontrol.',
+    recommendations: [
+      'Pusatkan log aktivitas POS, Navision, dan LAN ke satu dashboard monitoring.',
+      'Aktifkan alert otomatis (email/WA) untuk kondisi anomali: login gagal, server offline, promo tidak terhapus.',
+      'Tetapkan jadwal review log harian atau mingguan oleh IT.',
+      'Evaluasi bulanan terhadap tren insiden dan anomali yang ditemukan'
+    ],
+    priority: 'Sedang'
   },
   {
-    id: 'REC-05',
-    title: 'Implementasi Monitoring Otomatis',
-    category: 'Monitoring',
-    priority: 'HIGH',
-    description: 'Implementasi sistem monitoring otomatis dengan notifikasi alert untuk mendeteksi gangguan sistem, anomali aktivitas pengguna, dan masalah jaringan. Integrasikan monitoring ke dashboard IT sehingga dapat diakses real-time oleh IT toko dan pusat.',
-    responsible: 'IT Pusat + IT Toko',
-    target: '60 hari'
+    function: 'Respond',
+    risk: 'Tidak ada SOP penanganan insiden tertulis; analisis dan dokumentasi insiden belum dilakukan secara sistematis; tidak ada standar komunikasi saat terjadi gangguan.',
+    impact: 'Respons tidak seragam; pemulihan lambat; insiden serupa dapat berulang karena tidak ada pembelajaran formal.',
+    recommendations: [
+      'Susun SOP Penanganan Insiden 1-2 halaman (pelaporan-triase-eskalasi-penutupan).',
+      'Buat template laporan insiden: waktu, penyebab, dampak, tindakan, rekomendasi.',
+      'Implementasikan form RCA (Root Cause Analysis) untuk setiap insiden P1 dan P2.',
+      'Lakukan simulasi penanganan insiden minimal 1x per tahun.'
+    ],
+    priority: 'Tinggi'
   },
   {
-    id: 'REC-06',
-    title: 'Pembuatan Risk Register Formal',
-    category: 'Governance',
-    priority: 'HIGH',
-    description: 'Buat dan dokumentasikan risk register formal berdasarkan hasil audit ini. Lakukan evaluasi risk register minimal setiap 6 bulan. Tunjuk penanggung jawab manajemen risiko IT di setiap toko.',
-    responsible: 'Store Manager + Area Head',
-    target: '30 hari'
-  },
-  {
-    id: 'REC-07',
-    title: 'Penyusunan DRP & BCP',
-    category: 'Recovery',
-    priority: 'HIGH',
-    description: 'Susun Disaster Recovery Plan (DRP) dan Business Continuity Plan (BCP) formal yang mencakup: prosedur pemulihan data, target waktu pemulihan (RTO), daftar kontak darurat, prosedur operasional manual jika sistem mati. Uji DRP minimal 1x per tahun.',
-    responsible: 'IT Pusat + Store Manager',
-    target: '60 hari'
-  },
-  {
-    id: 'REC-08',
-    title: 'Pelatihan Keamanan Siber',
-    category: 'Training',
-    priority: 'HIGH',
-    description: 'Buat program pelatihan keamanan dasar untuk semua karyawan (bukan hanya IT dan manager). Materi meliputi: kesadaran keamanan password, pengenalan phishing, prosedur penanganan data sensitif, dan cara melaporkan insiden. Lakukan pelatihan minimal 1x per tahun.',
-    responsible: 'Store Manager + IT Toko',
-    target: '45 hari'
-  },
-  {
-    id: 'REC-09',
-    title: 'Dokumentasi Inventory Aset IT',
-    category: 'Governance',
-    priority: 'MEDIUM',
-    description: 'Buat inventaris lengkap semua aset IT per toko: hardware (komputer kasir, server, UPS, CCTV, perangkat jaringan), software (Navision versi, Talenta, OS), dan lisensi. Update inventaris setiap ada perubahan aset.',
-    responsible: 'IT Toko + IT Pusat',
-    target: '30 hari'
-  },
-  {
-    id: 'REC-10',
-    title: 'SOP Penanganan Insiden Tertulis',
-    category: 'Incident Response',
-    priority: 'HIGH',
-    description: 'Buat SOP tertulis untuk penanganan insiden yang mencakup: prosedur shutdown server darurat, langkah pertama saat POS mati, prosedur eskalasi (IT toko → Store Manager → IT Pusat), template laporan insiden, dan prosedur pasca-insiden. Pastikan SOP tersedia di setiap toko dan mudah diakses.',
-    responsible: 'IT Pusat + Store Manager',
-    target: '30 hari'
+    function: 'Recover',
+    risk: 'Backup hanya dilakukan sekitar satu bulan sekali secara lokal; belum pernah dilakukan uji pemulihan (restore test); tidak ada Disaster Recovery Plan (DRP).',
+    impact: 'Risiko gagal restore saat insiden besar; downtime berkepanjangan; kehilangan data transaksi yang tidak terbackup.',
+    recommendations: [
+      'Susun Disaster Recovery Plan (DRP) dengan jadwal, tanggung jawab, dan prosedur pelaporan.',
+      'Tingkatkan frekuensi backup menjadi harian/mingguan dengan pola 3-2-1.',
+      'Lakukan uji pemulihan (restore test) minimal satu kali per triwulan.',
+      'Simpan satu salinan backup di lokasi berbeda (offsite) sebagai proteksi fisik.',
+      'Dokumentasikan dan laporkan setiap proses serta hasil pemulihan kepada manajemen.'
+    ],
+    priority: 'Tinggi'
   }
 ];
 
-const categoryIcons: { [key: string]: any } = {
-  'Governance': FileText,
-  'Data Security': Database,
-  'Access Control': Lock,
-  'Infrastructure': Server,
-  'Monitoring': Activity,
-  'Recovery': Shield,
-  'Training': Users,
-  'Incident Response': AlertTriangle
-};
+const mapControlsToRiskData = [
+  { cId: 'C1', rId: 'R1', controlInPlace: 'Berdasarkan hasil wawancara, belum terdapat kebijakan keamanan tertulis. Direkomendasikan menyusun dan mengesahkan kebijakan keamanan informasi yang mencakup penggunaan sistem POS/Navision, aturan password, hak akses, dan prosedur backup, serta disosialisasikan kepada seluruh karyawan.', type: 'Preventive', outcome: 'Tersedianya kebijakan formal sehingga pengelolaan sistem lebih terarah dan konsisten', reason: 'Saat ini pengelolaan masih informal dan tidak terdokumentasi' },
+  { cId: 'C2', rId: 'R2', controlInPlace: 'Backup data saat ini hanya dilakukan secara lokal sekitar 1 bulan sekali. Direkomendasikan backup otomatis harian dan penyimpanan cloud serta uji restore', type: 'Corrective', outcome: 'Data dapat dipulihkan dengan cepat saat terjadi kehilangan', reason: 'Backup tidak rutin dan belum pernah diuji' },
+  { cId: 'C3', rId: 'R3', controlInPlace: 'Belum ada validasi sistem pada input kasir. Direkomendasikan penambahan validasi input dan pelatihan kasir', type: 'Preventive', outcome: 'Mengurangi kesalahan input transaksi', reason: 'Human error masih sering terjadi' },
+  { cId: 'C4', rId: 'R4', controlInPlace: 'Monitoring sistem masih manual oleh IT. Direkomendasikan penggunaan sistem monitoring otomatis (alert system)', type: 'Detective', outcome: 'Gangguan sistem dapat terdeteksi lebih cepat', reason: 'Tidak ada notifikasi otomatis' },
+  { cId: 'C5', rId: 'R5', controlInPlace: 'Belum terdapat SOP penanganan insiden. Direkomendasikan pembuatan SOP incident response', type: 'Detective', outcome: 'Penanganan insiden lebih cepat dan terstruktur', reason: 'Penanganan masih informal' },
+  { cId: 'C6', rId: 'R6', controlInPlace: 'Belum ada pembatasan akses yang jelas. Direkomendasikan penerapan role-based access control', type: 'Preventive', outcome: 'Akses sistem lebih terkontrol', reason: 'Risiko kebocoran data' },
+  { cId: 'C7', rId: 'R7', controlInPlace: 'Update sistem dilakukan tidak terjadwal. Direkomendasikan penjadwalan patch/update rutin', type: 'Preventive', outcome: 'Sistem lebih aman dari bug dan celah keamanan', reason: 'Update hanya saat ada masalah' },
+  { cId: 'C8', rId: 'R8', controlInPlace: 'Dokumentasi sistem belum tersedia. Direkomendasikan pembuatan dokumentasi teknis dan SOP IT', type: 'Detective', outcome: 'Mengurangi ketergantungan pada individu', reason: 'Ketergantungan pada 1 IT' },
+  { cId: 'C9', rId: 'R9', controlInPlace: 'Penggunaan akun masih bersama. Direkomendasikan penggunaan akun individu per karyawan', type: 'Preventive', outcome: 'Meningkatkan kontrol dan akuntabilitas', reason: 'Tidak bisa tracking pengguna' },
+  { cId: 'C10', rId: 'R10', controlInPlace: 'Belum ada uji pemulihan data. Direkomendasikan melakukan restore test secara berkala', type: 'Corrective', outcome: 'Memastikan backup dapat digunakan saat dibutuhkan', reason: 'Backup belum pernah diuji' }
+];
+
+const ratingTableData = [
+  { rId: 'R5', cId: 'C5', control: 'SOP incident belum tersedia', risk: 'Penanganan insiden tidak terstruktur', method: 'Interview dengan tim IT', result: 'Tidak terdapat SOP penanganan insiden', rating: 'Missing', points: 0, recommendation: 'Susun SOP incident response & alur eskalasi' },
+  { rId: 'R4', cId: 'C4', control: 'Monitoring sistem masih manual', risk: 'Keterlambatan deteksi gangguan', method: 'Interview & observasi', result: 'Monitoring dilakukan manual tanpa alert otomatis', rating: 'Ineffective', points: 2, recommendation: 'Implementasi monitoring & alert otomatis' },
+  { rId: 'R1', cId: 'C1', control: 'Tidak ada kebijakan keamanan', risk: 'Tata kelola tidak terarah', method: 'Interview dengan tim IT', result: 'Tidak terdapat kebijakan keamanan tertulis', rating: 'Missing', points: 0, recommendation: 'Susun kebijakan keamanan informasi' },
+  { rId: 'R2', cId: 'C2', control: 'Backup tidak rutin', risk: 'Gagal pulih layanan', method: 'Interview & pengecekan praktik backup', result: 'Backup ada namun tidak terjadwal dan tidak konsisten', rating: 'Ineffective', points: 2, recommendation: 'Jadwalkan backup harian + cloud' },
+  { rId: 'R6', cId: 'C6', control: 'Hak akses tidak diatur formal', risk: 'Kebocoran data', method: 'Interview & observasi akun', result: 'Akses sudah menggunakan akun tetapi belum ada pengaturan formal.', rating: 'Partially Effective', points: 3, recommendation: 'Terapkan role-based access control' },
+  { rId: 'R9', cId: 'C9', control: 'Disaster Recovery Plan belum tersedia', risk: 'Tidak ada akuntabilitas pemulihan', method: 'Interview', result: 'Tidak terdapat Disaster Recovery Plan', rating: 'Missing', points: 0, recommendation: 'Susun DRP dan RTO/RPO' },
+  { rId: 'R3', cId: 'C3', control: 'Validasi input tidak ada', risk: 'Human error', method: 'Interview & observasi', result: 'Kesalahan input masih terjadi dan tidak ada SOP validasi', rating: 'Missing', points: 0, recommendation: 'Tambahkan validasi sistem & SOP' },
+  { rId: 'R7', cId: 'C7', control: 'Update tidak rutin', risk: 'Kerentanan sistem', method: 'Interview', result: 'Update dilakukan tanpa jadwal tetap', rating: 'Ineffective', points: 2, recommendation: 'Jadwal patch/update rutin' },
+  { rId: 'R10', cId: 'C10', control: 'Tidak ada uji restore', risk: 'Backup tidak pasti', method: 'Interview', result: 'Backup belum pernah diuji pemulihannya', rating: 'Ineffective', points: 2, recommendation: 'Lakukan uji restore secara berkala' },
+  { rId: 'R8', cId: 'C8', control: 'Tidak ada dokumentasi sistem', risk: 'Ketergantungan pada IT', method: 'Interview', result: 'Dokumentasi belum tersedia', rating: 'Missing', points: 0, recommendation: 'Buat dokumentasi sistem & prosedur.' }
+];
 
 export function RecommendationCards() {
-  const [recommendations, setRecommendations] = useState<Recommendation[]>(initialRecommendations);
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    category: 'Governance',
-    priority: 'HIGH',
-    description: '',
-    responsible: '',
-    target: ''
-  });
-
-  const getPriorityColor = (priority: string) => {
-    if (priority === 'CRITICAL') return 'bg-[#EF4444] text-white';
-    if (priority === 'HIGH') return 'bg-[#F59E0B] text-white';
-    if (priority === 'MEDIUM') return 'bg-[#EAB308] text-white';
-    return 'bg-[#22C55E] text-white';
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const newRec: Recommendation = {
-      id: `REC-${String(recommendations.length + 1).padStart(2, '0')}`,
-      ...formData
-    };
-    setRecommendations([...recommendations, newRec]);
-    setFormData({
-      title: '',
-      category: 'Governance',
-      priority: 'HIGH',
-      description: '',
-      responsible: '',
-      target: ''
-    });
-    setShowForm(false);
-  };
-
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -159,152 +109,198 @@ export function RecommendationCards() {
           <h2 className="text-2xl text-[#1A1A2E] mb-2">Rekomendasi Perbaikan Pasca-Audit</h2>
           <p className="text-sm text-gray-600">Disusun berdasarkan temuan audit NIST CSF — TruFarm Airmadidi</p>
         </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-[#22C55E] hover:bg-[#15803D] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-        >
-          <Plus className="w-5 h-5" />
-          Tambah Rekomendasi
-        </button>
       </div>
 
-      {showForm && (
-        <div className="bg-white rounded-xl border-2 border-[#22C55E] p-6 mb-6 shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg text-[#1A1A2E]">Tambah Rekomendasi Baru</h3>
-            <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-gray-600">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm text-gray-700 mb-1">Judul Rekomendasi</label>
-              <input
-                type="text"
-                required
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#22C55E]"
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm text-gray-700 mb-1">Kategori</label>
-                <select
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#22C55E]"
-                >
-                  <option>Governance</option>
-                  <option>Access Control</option>
-                  <option>Data Security</option>
-                  <option>Monitoring</option>
-                  <option>Incident Response</option>
-                  <option>Recovery</option>
-                  <option>Training</option>
-                  <option>Infrastructure</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm text-gray-700 mb-1">Prioritas</label>
-                <select
-                  value={formData.priority}
-                  onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#22C55E]"
-                >
-                  <option>LOW</option>
-                  <option>MEDIUM</option>
-                  <option>HIGH</option>
-                  <option>CRITICAL</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm text-gray-700 mb-1">Target Waktu</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="contoh: 30 hari"
-                  value={formData.target}
-                  onChange={(e) => setFormData({ ...formData, target: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#22C55E]"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm text-gray-700 mb-1">Deskripsi Detail</label>
-              <textarea
-                required
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#22C55E]"
-                rows={3}
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-700 mb-1">Pihak yang Bertanggung Jawab</label>
-              <input
-                type="text"
-                required
-                value={formData.responsible}
-                onChange={(e) => setFormData({ ...formData, responsible: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#22C55E]"
-              />
-            </div>
-            <div className="flex gap-3 justify-end">
-              <button
-                type="button"
-                onClick={() => setShowForm(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Batal
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-[#22C55E] hover:bg-[#15803D] text-white rounded-lg transition-colors"
-              >
-                Simpan
-              </button>
-            </div>
-          </form>
+      {/* Tabel Ringkasan Rekomendasi NIST CSF */}
+      <div className="mb-10">
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-r-lg">
+          <p className="text-sm text-blue-800 text-justify">
+            Tabel berikut merangkum seluruh rekomendasi perbaikan berdasarkan enam fungsi dari NIST CSF 2.0, beserta risiko yang mendasari, dampak yang ditimbulkan, prioritas penanganan, dan status kontrol saat ini di TRUFARM. Rekomendasi ini disusun berdasarkan kondisi nyata hasil wawancara dengan pihak TRUFARM dan analisis menggunakan NIST Cybersecurity Framework (CSF) versi 2.0.
+          </p>
         </div>
-      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {recommendations.map((rec) => {
-          const Icon = categoryIcons[rec.category] || FileText;
-          return (
-            <div key={rec.id} className="bg-white rounded-xl border border-[#E2E8F0] p-6 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-start gap-4 mb-4">
-                <div className="bg-[#22C55E]/10 p-3 rounded-lg">
-                  <Icon className="w-6 h-6 text-[#15803D]" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-[#1A1A2E]">{rec.id} — {rec.title}</h3>
-                    <span className={`text-xs px-3 py-1 rounded-lg ${getPriorityColor(rec.priority)}`}>
-                      {rec.priority}
-                    </span>
-                  </div>
-                  <span className="inline-block px-3 py-1 bg-[#F8FAFC] text-[#15803D] text-xs rounded-lg mb-3">
-                    {rec.category}
-                  </span>
-                </div>
-              </div>
-              <p className="text-sm text-gray-700 mb-4">{rec.description}</p>
-              <div className="flex items-center justify-between text-sm pt-4 border-t border-gray-100">
-                <div>
-                  <p className="text-gray-500 text-xs mb-1">Tanggung Jawab</p>
-                  <p className="text-gray-900">{rec.responsible}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-gray-500 text-xs mb-1">Target</p>
-                  <p className="text-[#22C55E]">{rec.target}</p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-sm mb-6">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm text-gray-700">
+              <thead className="bg-[#1A1A2E] text-white">
+                <tr>
+                  <th className="px-4 py-3 font-medium whitespace-nowrap">Fungsi NIST</th>
+                  <th className="px-4 py-3 font-medium min-w-[250px]">Risiko / Kelemahan</th>
+                  <th className="px-4 py-3 font-medium min-w-[200px]">Dampak</th>
+                  <th className="px-4 py-3 font-medium min-w-[300px]">Rekomendasi / Kontrol Perbaikan</th>
+                  <th className="px-4 py-3 font-medium text-center whitespace-nowrap">Prioritas</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {nistRecommendations.map((item, index) => (
+                  <tr key={index} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-4 font-semibold align-top text-[#1A1A2E]">
+                      {item.function}
+                    </td>
+                    <td className="px-4 py-4 align-top text-gray-600">
+                      {item.risk}
+                    </td>
+                    <td className="px-4 py-4 align-top text-gray-600">
+                      {item.impact}
+                    </td>
+                    <td className="px-4 py-4 align-top">
+                      <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                        {item.recommendations.map((rec, i) => (
+                          <li key={i}>{rec}</li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td className="px-4 py-4 align-top text-center">
+                      <span className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-semibold ${item.priority === 'Tinggi' ? 'bg-[#EF4444] text-white' : 'bg-[#F59E0B] text-white'
+                        }`}>
+                        {item.priority}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="bg-green-50 border-l-4 border-[#22C55E] p-4 rounded-r-lg">
+          <p className="text-sm text-green-800 text-justify leading-relaxed">
+            Hasil rekomendasi di atas, telah disusun berdasarkan kondisi nyata dari hasil wawancara dengan pihak Trufarm dan dengan analisis menggunakan NIST Cybersecurity Framework (CSF) versi 2.0. Implementasi rekomendasi di atas diharapkan dapat memperkuat tata kelola keamanan sistem informasi TRUFARM secara bertahap dan berkelanjutan. Prioritas utama diberikan kepada aspek kebijakan tertulis, penguatan keamanan akses, audit sistem, dan penyusunan prosedur formal penanganan insiden dan pemulihan. Dengan menerapkan rekomendasi ini, TRUFARM diharapkan dapat meningkatkan kesiapan dalam menghadapi risiko, mengurangi potensi gangguan operasional, serta menjaga keamanan data transaksi dan kepercayaan manajemen dalam pengelolaan sistem informasi.
+          </p>
+        </div>
       </div>
+
+      {/* Map Controls to Risk */}
+      <div className="mb-10">
+        <h3 className="text-xl font-semibold text-[#1A1A2E] mb-4">5.1 Map Controls to Risk</h3>
+        <p className="text-sm text-gray-700 mb-4 leading-relaxed text-justify">
+          Bagian ini memetakan setiap Risiko yang menjadi prioritas ke control yang sesuai agar jalur Risiko, control, dan Tindakan jelas, terukur, dan dapat diaudit. Pemetaan ini disusun dari hasil wawancara dan kerangka NIST CSF, dengan tiga jenis control yaitu:
+          <br /><br />
+          <span className="font-semibold text-[#1A1A2E]">• Preventive:</span> mencegah kejadian sebelum terjadi<br />
+          <span className="font-semibold text-[#1A1A2E]">• Detective:</span> mendeteksi ancaman atau anomali sedini mungkin<br />
+          <span className="font-semibold text-[#1A1A2E]">• Corrective:</span> memulihkan sistem dan menurunkan dampak setelah insiden
+        </p>
+
+        <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm text-gray-700">
+              <thead className="bg-[#1A1A2E] text-white">
+                <tr>
+                  <th className="px-4 py-3 font-medium whitespace-nowrap">Control ID</th>
+                  <th className="px-4 py-3 font-medium whitespace-nowrap">Risk ID</th>
+                  <th className="px-4 py-3 font-medium min-w-[300px]">Control in Place</th>
+                  <th className="px-4 py-3 font-medium whitespace-nowrap">Control Type</th>
+                  <th className="px-4 py-3 font-medium min-w-[200px]">Expected Outcome</th>
+                  <th className="px-4 py-3 font-medium min-w-[200px]">Reason</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {mapControlsToRiskData.map((item, index) => (
+                  <tr key={index} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 font-semibold text-[#1A1A2E] align-top">{item.cId}</td>
+                    <td className="px-4 py-3 font-semibold text-[#EF4444] align-top">{item.rId}</td>
+                    <td className="px-4 py-3 align-top text-gray-600">{item.controlInPlace}</td>
+                    <td className="px-4 py-3 align-top">
+                      <span className={`inline-flex items-center justify-center px-2 py-1 rounded-md text-xs font-medium ${item.type === 'Preventive' ? 'bg-blue-100 text-blue-800' :
+                          item.type === 'Detective' ? 'bg-purple-100 text-purple-800' :
+                            'bg-orange-100 text-orange-800'
+                        }`}>
+                        {item.type}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 align-top text-gray-600">{item.outcome}</td>
+                    <td className="px-4 py-3 align-top text-gray-600">{item.reason}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* 5.2 Rating Table (Ranking) */}
+      <div className="mb-10">
+        <h3 className="text-xl font-semibold text-[#1A1A2E] mb-4"> Rating Table (Ranking) - Map Controls to Risks</h3>
+
+        <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-sm mb-6">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm text-gray-700">
+              <thead className="bg-[#1A1A2E] text-white">
+                <tr>
+                  <th className="px-4 py-3 font-medium whitespace-nowrap">RID</th>
+                  <th className="px-4 py-3 font-medium whitespace-nowrap">C I</th>
+                  <th className="px-4 py-3 font-medium min-w-[200px]">Control</th>
+                  <th className="px-4 py-3 font-medium min-w-[150px]">Risk</th>
+                  <th className="px-4 py-3 font-medium min-w-[150px]">Evaluation Method</th>
+                  <th className="px-4 py-3 font-medium min-w-[200px]">Result</th>
+                  <th className="px-4 py-3 font-medium whitespace-nowrap">Rating</th>
+                  <th className="px-4 py-3 font-medium text-center whitespace-nowrap">Points</th>
+                  <th className="px-4 py-3 font-medium min-w-[200px]">Recommendation</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {ratingTableData.map((item, index) => (
+                  <tr key={index} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 font-semibold text-[#EF4444] align-top">{item.rId}</td>
+                    <td className="px-4 py-3 font-semibold text-[#1A1A2E] align-top">{item.cId}</td>
+                    <td className="px-4 py-3 align-top text-gray-600">{item.control}</td>
+                    <td className="px-4 py-3 align-top text-gray-600">{item.risk}</td>
+                    <td className="px-4 py-3 align-top text-gray-600">{item.method}</td>
+                    <td className="px-4 py-3 align-top text-gray-600">{item.result}</td>
+                    <td className="px-4 py-3 align-top">
+                      <span className={`inline-flex items-center justify-center px-2 py-1 rounded-md text-xs font-medium ${item.rating === 'Missing' ? 'bg-red-100 text-red-800' :
+                          item.rating === 'Ineffective' ? 'bg-orange-100 text-orange-800' :
+                            'bg-yellow-100 text-yellow-800'
+                        }`}>
+                        {item.rating}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 align-top text-center font-bold text-[#1A1A2E]">
+                      {item.points > 0 ? `+${item.points}` : item.points}
+                    </td>
+                    <td className="px-4 py-3 align-top text-gray-600">{item.recommendation}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-5">
+            <h4 className="font-semibold text-[#1A1A2E] mb-3">Keterangan:</h4>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li><span className="inline-block w-32 font-medium text-green-700">Effective</span> = +4</li>
+              <li><span className="inline-block w-32 font-medium text-yellow-700">Partially Effective</span> = +3</li>
+              <li><span className="inline-block w-32 font-medium text-orange-700">Ineffective</span> = +2</li>
+              <li><span className="inline-block w-32 font-medium text-red-700">Missing</span> = 0 (+1 / −2)</li>
+            </ul>
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <p className="font-semibold text-[#1A1A2E]">Total points saat ini: <span className="text-red-600">11 / 40</span> (10 kontrol × maksimum 4)</p>
+            </div>
+          </div>
+
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-5">
+            <h4 className="font-semibold text-[#1A1A2E] mb-3">Standar Penilaian Trufarm:</h4>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li><span className="font-medium text-green-700">Skor 30–40 = Tinggi</span> (Kontrol matang, terdokumentasi baik)</li>
+              <li><span className="font-medium text-yellow-700">Skor 20–29 = Sedang</span> (Kontrol berjalan tetapi tidak konsisten)</li>
+              <li><span className="font-medium text-orange-700">Skor 10–19 = Rendah</span> (Kontrol sebagian besar tidak efektif)</li>
+              <li><span className="font-medium text-red-700">Skor &lt; 10 = Sangat Rendah</span> (Hampir seluruh kontrol tidak tersedia)</li>
+            </ul>
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <p className="font-semibold text-[#1A1A2E]">Nilai Trufarm saat ini = <span className="text-red-600">11/40 (Rendah)</span></p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg shadow-sm">
+          <p className="text-sm text-red-800 leading-relaxed text-justify">
+            Berdasarkan total skor 11 dari maksimum 40, tingkat efektivitas kontrol keamanan informasi di Trufarm berada pada kategori <strong className="font-bold">Rendah</strong>. Hal ini menunjukkan bahwa sebagian besar kontrol masih belum berjalan secara konsisten atau belum terdokumentasi, dan masih bergantung pada kebiasaan manual serta pengalaman individu tim IT. Dengan demikian, Trufarm memerlukan peningkatan signifikan pada aspek dokumentasi, standarisasi proses, serta penerapan kontrol preventif dan detektif yang lebih kuat.
+          </p>
+        </div>
+      </div>
+
     </div>
   );
 }

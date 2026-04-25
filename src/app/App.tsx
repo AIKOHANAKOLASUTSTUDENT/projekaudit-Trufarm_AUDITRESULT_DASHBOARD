@@ -6,6 +6,7 @@ import {
   AlertTriangle,
   Lightbulb,
   ShieldCheck,
+  BarChart,
   Menu,
   X
 } from "lucide-react";
@@ -17,6 +18,7 @@ import { ScopeObjective } from "./components/ScopeObjective";
 import { RiskRegisterTable } from "./components/RiskRegisterTable";
 import { SwotAnalysis } from "./components/SwotAnalysis";
 import { RecommendationCards } from "./components/RecommendationCards";
+import { NistCsfAssessment } from "./components/NistCsfAssessment";
 
 const logoTrufarm = "/TRUFARM.jpg";
 
@@ -31,6 +33,7 @@ export default function App() {
     { id: "scope", label: "Scope & Objective", icon: Target },
     { id: "risk", label: "Risk Register", icon: AlertTriangle },
     { id: "swot", label: "Analisis & SWOT", icon: ShieldCheck },
+    { id: "nist", label: "NIST CSF Assessment", icon: BarChart },
     { id: "rekomendasi", label: "Rekomendasi", icon: Lightbulb },
   ];
 
@@ -41,6 +44,7 @@ export default function App() {
       case "scope": return <ScopeObjective />;
       case "risk": return <RiskRegisterTable />;
       case "swot": return <SwotAnalysis />;
+      case "nist": return <NistCsfAssessment />;
       case "rekomendasi": return <RecommendationCards />;
       default: return <DashboardOverview />;
     }
